@@ -9,6 +9,9 @@ pipeline {
         git branch: 'main', url: 'https://github.com/abohatyrov/petclinic.git'
         sh 'mvn clean package'
       }
+      post {
+        googleStorageUpload bucket: 'gs://petclinic-artifacts-tf', credentialsId: 'petclinic-app', pattern: '**/*.jar'
+      }
     }
   }
 }
