@@ -1,9 +1,10 @@
 pipeline {
-  agent { docker { image 'maven:3.9.0-eclipse-temurin-11' } }
+  agent { maven: 'maven-3.8.7' }
   stages {
-    stage('build') {
-      steps {
-        sh 'mvn --version'
+    stage('Build') {
+      git url: 'https://github.com/cyrille-leclerc/multi-module-maven-project'
+      withMaven {
+        sh "mvn clean package"
       }
     }
   }
