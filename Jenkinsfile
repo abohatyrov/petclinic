@@ -5,16 +5,22 @@ pipeline {
   }
   stages {   
     stage('Build app') {
-      git branch: 'main', url: 'https://github.com/abohatyrov/petclinic.git'
-      sh 'mvn clean -DskipTests package'
+      steps {
+        git branch: 'main', url: 'https://github.com/abohatyrov/petclinic.git'
+        sh 'mvn clean -DskipTests package'
+      }
     }
 
     stage('Tests') {
-      sh 'mvn test'
+      steps {
+        sh 'mvn test'
+      }
     }
 
     stage('Upload artifacts') {
-      googleStorageUpload bucket: 'gs://petclinic-artifacts-tf', credentialsId: 'petclinic-app', pattern: 'target/*.jar'
+      steps {
+        googleStorageUpload bucket: 'gs://petclinic-artifacts-tf', credentialsId: 'petclinic-app', pattern: 'target/*.jar'
+      }
     }
 
     stage('Docker image') {
