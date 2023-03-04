@@ -17,7 +17,7 @@ pipeline {
       googleStorageUpload bucket: 'gs://petclinic-artifacts-tf', credentialsId: 'petclinic-app', pattern: 'target/*.jar'
     }
 
-    stage('Docker image') 
+    stage('Docker image') {
       steps {
         dockerImage = docker.build("abohatyrov/petclinic")
 
