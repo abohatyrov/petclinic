@@ -34,7 +34,7 @@ pipeline {
       steps {
         script {
           dockerImage = docker.build(registry)
-          docker.withRegistry([ credentialsId: registryCredential, url: "https://index.docker.io/v1/" ]) {
+          docker.withRegistry("", registryCredential) {
             dockerImage.push()
           }
         }
