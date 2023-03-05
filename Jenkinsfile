@@ -23,10 +23,14 @@ pipeline {
       }
     }
 
-    stage('Docker image') {
+    stage('Image build') {
       steps {
         dockerImage = docker.build("abohatyrov/petclinic")
+      }
+    }
 
+    stage('Image push') {
+      steps {
         withDockerRegistry([ credentialsId: "dockerhubaccount", url: "" ]) {
           dockerImage.push()
         }
