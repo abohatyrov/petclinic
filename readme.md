@@ -25,7 +25,7 @@ The CI pipeline is implemented in Jenkins and is composed of several stages:
 ### Stage 1: Build
 The first stage of the pipeline is to build the Spring Petclinic application from source code. This is done by cloning the source code from the GitHub repository and using Maven to build the application.
 
-```Jenkinsfile
+```
 stage('Build') {
   steps {
     git branch: 'main', url: 'https://github.com/abohatyrov/petclinic.git'
@@ -37,7 +37,7 @@ stage('Build') {
 ### Stage 2: Test
 The second stage of the pipeline is to run unit tests on the built application. This is done using the mvn test command.
 
-```Jenkinsfile
+```
 stage('Tests') {
   steps {
     sh 'mvn test'
@@ -61,7 +61,7 @@ EXPOSE 8080
 
 ENTRYPOINT [ "java", "-jar", "${ARTIFACT_NAME}.jar" ]
 ```
-```Jenkinsfile
+```
 stage('Docker image') {
   steps {
     script {
@@ -76,7 +76,7 @@ stage('Docker image') {
 
 ### Stage 4: Save artifacts to GCS
 This stage of the pipeline is to save artifacts on Google Cloud Storage. GCS plugin for Jenkins is used for this stage.
-```Jenkinsfile
+```
 stage('Upload artifacts') {
   steps {
     googleStorageUpload bucket: "gs://$bucketName", credentialsId: googleCredential, pattern: "target/*.jar"
@@ -86,10 +86,11 @@ stage('Upload artifacts') {
 
 ### Stage 5: Cleanup
 This stage of the pipeline is to clean all temp files. There are two steps in this stage: remove docker image from jenkins server using `docker rmi` command and delete all artifacts, because all artifacts was saved in a previous stage.
-```Jenkinsfile
-stage('Upload artifacts') {
+```
+stage('Cleanup') {
   steps {
-    googleStorageUpload bucket: "gs://$bucketName", credentialsId: googleCredential, pattern: "target/*.jar"
+    sh "docker rmi $registry"
+    sh "rm -rf target"
   }
 }
 ```
