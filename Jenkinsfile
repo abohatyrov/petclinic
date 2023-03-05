@@ -11,7 +11,7 @@ pipeline {
     dockerImage = ""
   }
   stages {   
-    stage('Build app') {
+    stage('Build') {
       steps {
         git branch: 'main', url: 'https://github.com/abohatyrov/petclinic.git'
         sh 'mvn clean -DskipTests package'
@@ -38,6 +38,13 @@ pipeline {
             dockerImage.push()
           }
         }
+      }
+    }
+
+    stage('Cleanup') {
+      steps {
+        sh "docker rmi $registry"
+        sh "rm -rf target"
       }
     }
   }
