@@ -9,6 +9,7 @@ The project involves creating a Continuous Integration (CI) pipeline to build, t
 - Building a Docker image of the application
 - Pushing the Docker image to Docker Hub
 - Uploading artifacts to a GCP bucket
+- Deploying on kubernetes cluster using Helm
 ## Infrastructure
 The infrastructure for the project is created using Terraform. The following resources are created:
 
@@ -19,8 +20,8 @@ The infrastructure for the project is created using Terraform. The following res
 - A Docker Hub account for storing Docker images
 
 _Note: terraform files stored in different [repo](https://github.com/abohatyrov/petclinic-tf/)_
-## CI Pipeline
-The CI pipeline is implemented in Jenkins and is composed of several stages:
+## CI/CD Pipeline
+The CI/CD pipeline is implemented in Jenkins and is composed of several stages:
 
 ### Stage 1: Build
 The first stage of the pipeline is to build the Spring Petclinic application from source code. This is done by cloning the source code from the GitHub repository and using Maven to build the application.
@@ -86,6 +87,16 @@ stage('Upload artifacts') {
 
 ### Stage 5: Cleanup
 This stage of the pipeline is to clean all temp files. There are two steps in this stage: remove docker image from jenkins server using `docker rmi` command and delete all artifacts, because all artifacts was saved in a previous stage.
+```
+stage('Cleanup') {
+  steps {
+    sh "docker rmi $registry"
+    sh "rm -rf target"
+  }
+}
+```
+
+### Stage 6: Deploy on k8s
 ```
 stage('Cleanup') {
   steps {
