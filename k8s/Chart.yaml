@@ -1,0 +1,6 @@
+apiVersion: v2
+name: petclinic-deployment
+version: "0.1.0"
+appVersion: "1.0.0"
+kubeVersion: ">= 1.13.0"
+type: application

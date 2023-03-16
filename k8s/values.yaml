@@ -1,0 +1,13 @@
+deployment: petclinic-deployment
+replicaCount: 3
+containerName: petclinic
+
+image:
+  name: abohatyrov/petclinic
+  tag: latest
+
+service:
+  name: petclinic-lb
+  type: LoadBalancer
+  port: 8080
+  targetPort: 8080
