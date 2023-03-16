@@ -98,11 +98,14 @@ stage('Cleanup') {
 
 ### Stage 6: Deploy on k8s
 ```
-stage('Cleanup') {
-  steps {
-    sh "docker rmi $registry"
-    sh "rm -rf target"
+stage("Helm package") {
+  dir("k8s") {
+    sh "helm package ${APP_CHART_NAME} --version ${RELEASE_VERSION} --app-version ${APP_VERSION}"
   }
+}
+
+stage("Helm install") {
+  sh "helm install --atomic petclinic petclinic-${RELEASE_VERSION}.tgz"
 }
 ```
 
